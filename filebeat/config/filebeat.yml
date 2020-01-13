@@ -1,0 +1,23 @@
+---
+filebeat.inputs:
+- type: log
+  enabled: false
+  paths:
+    - /var/log/*.log
+
+filebeat.config.modules:
+  path: ${path.config}/modules.d/*.yml
+  reload.enabled: false
+
+processors:
+  - add_host_metadata: ~
+  - add_cloud_metadata: ~
+  
+output.elasticsearch:
+  hosts: ['elasticsearch:9200']
+  username: elastic
+  password: changeme
+ 
+#output.logstash:
+  # The Logstash hosts
+  #hosts: ["localhost:5044"]

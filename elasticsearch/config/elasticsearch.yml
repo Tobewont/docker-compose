@@ -8,7 +8,7 @@ network.host: 0.0.0.0
 ## X-Pack settings
 ## see https://www.elastic.co/guide/en/elasticsearch/reference/current/setup-xpack.html
 #
-xpack.license.self_generated.type: trial
+xpack.license.self_generated.type: trial        #trial为试用版，一个月期限，可更改为basic版本
 xpack.security.enabled: true
 xpack.monitoring.collection.enabled: true
 

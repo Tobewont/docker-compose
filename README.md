@@ -1,2 +1,7 @@
 # elfk-docker
-docker-compose deploy elfk
+
+以docker-compose方式部署elfk
+
+```bash
+docker-compose up --build -d
+```

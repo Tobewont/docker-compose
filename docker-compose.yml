@@ -67,11 +67,11 @@ services:
 
 volumes:
   elasticsearch:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: /home/elfk/elasticsearch/data
+#    driver: local
+#    driver_opts:
+#      type: none
+#      o: bind
+#      device: /home/elfk/elasticsearch/data
       
 networks:
   elk:

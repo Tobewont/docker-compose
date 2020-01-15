@@ -8,7 +8,7 @@ docker-compose up --build -d
 
 ### filebeat
 
-对于filebeat，分布式部署。以收集 `/home/logs/` 目录下所有日志为例，映射目录时 `rw`权限不可少。
+对于filebeat，分布式部署。以收集 `/home/logs/` 目录下所有日志为例，映射目录时 `rw` 权限不可少。
 
 ```bash
 cd filebeat/

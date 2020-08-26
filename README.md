@@ -1,2 +1,2 @@
 ## Docker-Compose
-deploy common software.
+Install common software using docker-compose

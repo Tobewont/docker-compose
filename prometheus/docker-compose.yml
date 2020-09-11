@@ -1,0 +1,88 @@
+version: '3.7'
+
+services:
+  node-exporter:
+    image: prom/node-exporter:latest
+    ports:
+      - "9100:9100"
+    networks:
+      - prom
+
+  dingtalk:
+    image: timonwong/prometheus-webhook-dingtalk:latest
+    volumes:
+      - type: bind
+        source: ./alertmanager/config.yml
+        target: /etc/prometheus-webhook-dingtalk/config.yml
+        read_only: true
+    ports:
+      - "8060:8060"
+    networks:
+      - prom
+
+  alertmanager:
+    depends_on:
+      - dingtalk
+    image: prom/alertmanager:latest
+    volumes:
+      - type: bind
+        source: ./alertmanager/alertmanager.yml
+        target: /etc/alertmanager/alertmanager.yml
+        read_only: true
+    ports:
+      - "9093:9093"
+      - "9094:9094"
+    networks:
+      - prom
+
+  prometheus:
+    depends_on:
+      - alertmanager
+    image: prom/prometheus:latest
+    volumes:
+      - type: bind
+        source: ./prometheus/prometheus.yml
+        target: /etc/prometheus/prometheus.yml
+        read_only: true
+      - type: bind
+        source: ./prometheus/alert-rules.yml
+        target: /etc/prometheus/alert-rules.yml
+        read_only: true
+      - type: volume
+        source: prometheus
+        target: /prometheus
+    ports:
+      - "9090:9090"
+    networks:
+      - prom
+
+  grafana:
+    depends_on:
+      - prometheus
+    image: grafana/grafana:latest
+    volumes:
+      - type: volume
+        source: grafana
+        target: /var/lib/grafana
+    ports:
+      - "3000:3000"
+    networks:
+      - prom
+
+volumes:
+  prometheus:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/prom/prometheus/data
+  grafana:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/prom/grafana
+      
+networks:
+  prom:
+    driver: bridge

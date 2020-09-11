@@ -1,0 +1,78 @@
+version: '3.7'
+
+services:
+  mariadb:
+    image: bitnami/mariadb:latest
+    ports:
+      - "3306:3306"
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+      - MARIADB_USER=bn_redmine
+      - MARIADB_DATABASE=bitnami_redmine
+    volumes:
+      - type: volume
+        source: mariadb
+        target: /bitnami/mariadb
+      - type: volume
+        source: mariadb_log
+        target: /opt/bitnami/mariadb/logs
+    networks:
+      - redmine
+      
+  redmine:
+    depends_on:
+      - mariadb
+    image: bitnami/redmine:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - REDMINE_USERNAME=admin
+      - REDMINE_PASSWORD=admin
+      - REDMINE_DB_MYSQL=mariadb
+      - REDMINE_DB_USERNAME=bn_redmine
+      - REDMINE_DB_NAME=bitnami_redmine
+      - SMTP_HOST=smtp.exmail.qq.com 
+      - SMTP_PORT=465
+      - SMTP_TLS=true
+      - SMTP_DOMAIN=exmail.qq.com
+      - SMTP_AUTHENTICATION=plain
+      - SMTP_USER=xxx@qq.com
+      - SMTP_PASSWORD=xxxxxx
+    volumes:
+      - type: volume
+        source: redmine
+        target: /bitnami/redmine
+      - type: volume
+        source: redmine_log
+        target: /opt/bitnami/redmine/logs
+    networks:
+      - redmine
+
+volumes:
+  mariadb:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/bitnami/mariadb
+  redmine:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/bitnami/redmine
+  mariadb_log:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/bitnami/logs/mariadb
+  redmine_log:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/bitnami/logs/redmine
+networks:
+  redmine:
+    driver: bridge

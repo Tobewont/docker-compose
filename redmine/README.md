@@ -1,4 +1,4 @@
-### yapi
+### redmine
 
 以docker-compose方式部署redmine。
 
@@ -41,7 +41,7 @@ default:
   email_delivery:
     delivery_method: :smtp
     smtp_settings:
-      ssl: true             #必须要加上 ssl:true
+      ssl: true             #必须要加上 ssl: true
       address: "smtp.exmail.qq.com"
       port: 465
       domain: "exmail.qq.com"

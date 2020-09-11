@@ -1,4 +1,4 @@
-### yapi
+### redmine
 
 以docker-compose方式部署redmine。
 

@@ -10,9 +10,9 @@ docker-compose up --build
 
 打开`ip:9090`，输入相应的配置和点击开始部署，完成整个网站的部署。
 
-![Image text](https://github.com/Tobewont/docker-compose/tree/master/yapi/png/yapi-1.png)
+![Image text](https://github.com/Tobewont/docker-compose/blob/master/yapi/png/yapi-1.png)
 
-![Image text](https://github.com/Tobewont/docker-compose/tree/master/yapi/png/yapi-2.png)
+![Image text](https://github.com/Tobewont/docker-compose/blob/master/yapi/png/yapi-2.png)
 
 使用`Ctrl + C`退出，重新修改 `docker-compose.yaml`
 
@@ -97,9 +97,9 @@ yapi    docker-entrypoint.sh node  ...   Up      0.0.0.0:3000->3000/tcp, 0.0.0.0
 
 打开`ip:3000`，账号/密码：`admin@admin.com`/`ymfe.org`。
 
-![Image text](https://github.com/Tobewont/docker-compose/tree/master/yapi/png/yapi-3.png)
+![Image text](https://github.com/Tobewont/docker-compose/blob/master/yapi/png/yapi-3.png)
 
-![Image text](https://github.com/Tobewont/docker-compose/tree/master/yapi/png/yapi-4.png)
+![Image text](https://github.com/Tobewont/docker-compose/blob/master/yapi/png/yapi-4.png)
 
 至此，以docker-compose方式部署yapi完成。
 

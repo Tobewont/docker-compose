@@ -1,0 +1,66 @@
+version: '3.7'
+
+services:
+  mariadb:
+    container_name: mariadb
+    image: bitnami/mariadb:latest
+    environment:
+      - MARIADB_ROOT_PASSWORD=testlink
+      - MARIADB_USER=bn_testlink
+      - MARIADB_PASSWORD=testlink
+      - MARIADB_DATABASE=testlink
+    restart: always
+    volumes:
+      - type: volume
+        source: mariadb_data
+        target: /bitnami/mariadb
+    networks:
+      - testlink
+
+  testlink:
+    depends_on:
+      - mariadb
+    container_name: testlink
+    image: bitnami/testlink:latest
+    ports:
+      - '8088:8080'
+      - '8443:8443'
+    environment:
+      - TESTLINK_DATABASE_HOST=mariadb
+      - TESTLINK_DATABASE_PORT_NUMBER=3306
+      - TESTLINK_DATABASE_USER=bn_testlink
+      - TESTLINK_DATABASE_PASSWORD=testlink
+      - TESTLINK_DATABASE_NAME=testlink
+      - TESTLINK_USERNAME=testlink
+      - TESTLINK_PASSWORD=testlink
+      - TESTLINK_EMAIL=<your-email>@admin.com                #邮箱地址
+      - TESTLINK_SMTP_HOST=smtp.admin.com                #smtp服务器地址
+      - TESTLINK_SMTP_PORT=465
+      - TESTLINK_SMTP_USER=<your-email>@admin.com                #邮箱地址
+      - TESTLINK_SMTP_PASSWORD=Xisland123                #邮箱密码或授权码
+      - TESTLINK_SMTP_PROTOCOL=ssl
+    restart: always
+    volumes:
+      - type: volume
+        source: testlink_data
+        target: /bitnami/testlink
+    networks:
+      - testlink
+
+volumes:
+  mariadb_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/testlink/mariadb/data
+  testlink_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/testlink/testlink/data
+
+networks:
+  testlink:
+    driver: bridge

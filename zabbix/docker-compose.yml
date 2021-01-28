@@ -1,0 +1,94 @@
+version: '3.7'
+
+services:
+  mysql:
+    container_name: mysql
+    image: mysql:5.7.28
+    command:
+      --character-set-server=utf8
+      --collation-server=utf8_bin
+      --default-authentication-plugin=mysql_native_password
+    ports:
+      - '3306:3306'
+    environment:
+      MYSQL_DATABASE: zabbix
+      MYSQL_USER: zabbix
+      MYSQL_PASSWORD: zabbix
+      MYSQL_ROOT_PASSWORD: zabbix
+    restart: always
+    volumes:
+      - type: volume
+        source: mysql_data
+        target: /var/lib/mysql
+    networks:
+      - zabbix
+
+  zabbix-server:
+    depends_on:
+      - mysql
+    container_name: zabbix-server
+    image: zabbix/zabbix-server-mysql:latest
+    ports:
+      - '10051:10051'
+    environment:
+      DB_SERVER_HOST: mysql
+      MYSQL_DATABASE: zabbix
+      MYSQL_USER: zabbix
+      MYSQL_PASSWORD: zabbix
+      MYSQL_ROOT_PASSWORD: zabbix
+      ZBX_SOURCEIP: "192.168.30.135"                #ip
+    links:
+      - mysql
+    restart: always
+    networks:
+      - zabbix
+
+  zabbix-web-nginx-mysql:
+    depends_on:
+      - zabbix-server
+    container_name: zabbix-web-nginx-mysql
+    image: zabbix/zabbix-web-nginx-mysql:latest
+    environment:
+      DB_SERVER_HOST: mysql
+      MYSQL_DATABASE: zabbix
+      MYSQL_USER: zabbix
+      MYSQL_PASSWORD: zabbix
+      MYSQL_ROOT_PASSWORD: zabbix
+      ZBX_SERVER_HOST: zabbix-server
+      PHP_TZ: Asia/Shanghai
+    ports:
+      - '8080:8080'
+    links:
+      - mysql
+      - zabbix-server
+    restart: always
+    networks:
+      - zabbix
+
+  zabbix-agent:
+    depends_on:
+      - zabbix-server
+    container_name: zabbix-agent
+    image: zabbix/zabbix-agent:latest
+    environment:
+      ZBX_HOSTNAME: "192.168.30.135"
+      ZBX_SERVER_HOST: "192.168.30.135"
+    ports:
+      - '10050:10050'
+    links:
+      - zabbix-server
+    restart: always
+    networks:
+      - zabbix
+
+volumes:
+  mysql_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /data/mysql
+
+networks:
+  zabbix:
+    driver: bridge
